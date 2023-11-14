@@ -482,11 +482,18 @@ class TestDatetimePlotting:
         fig, ax = plt.subplots()
         ax.stairs(...)
 
-    @pytest.mark.xfail(reason="Test for stem not written yet")
     @mpl.style.context("default")
     def test_stem(self):
-        fig, ax = plt.subplots()
-        ax.stem(...)
+        mpl.rcParams["date.converter"] = "concise"
+        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, constrained_layout=True)
+
+        base = datetime.datetime(2000, 1, 1)
+        dates = np.array([base + datetime.timedelta(days=(365*i)) for i in range(10)])
+        vals = np.array([1.5 ** i for i in range(10)])
+
+        ax1.stem(dates, vals)
+        ax2.stem(vals, dates)
+        ax3.stem(dates, dates)
 
     @mpl.style.context("default")
     def test_step(self):
